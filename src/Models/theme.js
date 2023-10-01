@@ -11,11 +11,20 @@ const theme = createTheme({
       },
     },
     MuiGrid: {
-      defaultProps: {
-        style: {
-          backgroundColor: "#262626",
+      variants: [
+        {
+          props: { className: "background" },
+          style: {
+            backgroundColor: "#262626",
+          },
         },
-      },
+        {
+          props: { className: "card" },
+          style: {
+            backgroundColor: "#205C3E",
+          },
+        },
+      ],
     },
     MuiPaper: {
       defaultProps: {
@@ -24,9 +33,35 @@ const theme = createTheme({
         },
       },
     },
+    MuiButton: {
+      defaultProps: {
+        sx: {
+          backgroundColor: "#3DAF81",
+          color: "#3D423D",
+          ":hover": {
+            backgroundColor: "#237D59",
+          },
+        },
+      },
+    },
+    MuiTextField: {
+      defaultProps: {
+        sx: {
+          color: "white",
+        },
+      },
+    },
   },
   status: {
     danger: orange[500],
+  },
+  palette: {
+    primary: {
+      main: "#237D59",
+    },
+    secondary: {
+      main: "#237D59",
+    },
   },
 });
 

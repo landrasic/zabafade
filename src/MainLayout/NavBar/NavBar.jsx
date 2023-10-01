@@ -8,7 +8,7 @@ import AdbIcon from '@mui/icons-material/Adb';
 import LogoPath from '../../Assets/Images/favicon-32x32.png'
 
 function NavBar() {
-  const pages = ['Products', 'Pricing', 'Blog'];
+  const pages = [];
   const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);

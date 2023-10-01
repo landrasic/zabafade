@@ -8,7 +8,7 @@ import { styled } from '@mui/material/styles'
 
 function MainLayout() {
   return (
-    <Grid container height='100%' direction='column'>
+    <Grid container height='100%' direction='column' className='background'>
       <Grid item xs={1}>
         <NavBar />
       </Grid>
