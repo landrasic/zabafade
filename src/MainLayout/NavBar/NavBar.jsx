@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 
-import { AppBar, Box, Toolbar, Typography, IconButton, Menu, Container, Avatar, Button, Tooltip, MenuItem, } from "@mui/material";
+import { AppBar, Box, Toolbar, Typography, IconButton, Menu, Avatar, Button, Tooltip, MenuItem, } from "@mui/material";
 
 import MenuIcon from '@mui/icons-material/Menu';
 import AdbIcon from '@mui/icons-material/Adb';
@@ -31,7 +31,7 @@ function NavBar() {
 
   const LogoIcon = () => {
     return (
-      <img src={LogoPath} style={{ paddingRight: '5px' }} />
+      <img src={LogoPath} style={{ paddingRight: '5px' }} alt='logo' />
     )
   }
 

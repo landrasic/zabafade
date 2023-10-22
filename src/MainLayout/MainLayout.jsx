@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Outlet } from 'react-router-dom';
 import NavBar from './NavBar'
 
-import { Grid, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles'
-
+import { Grid } from '@mui/material';
 
 function MainLayout() {
   return (

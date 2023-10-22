@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import axios from 'axios'
 
 import { Card, Typography, Grid, TextField, Button } from "@mui/material";
 
@@ -16,6 +17,38 @@ const Loginpage = () => {
     const [customSx, setCustomSx] = useState(null);
     const [mode, setMode] = useState('login');
     const [animationEnd, setAnimationEnd] = useState(true);
+
+    const handleLogin = () => {
+        axios.get('http://localhost:8000')
+            .then(res => {
+                let data = res.data;
+                if (!data || (data.length === 0)) throw new Error('No data found!');
+                data.forEach((entry) => {
+                    if ((entry.name === loginInput.username) && (entry.pwd === loginInput.password)) console.log('Successful login!');
+                    else console.log('Unsuccessful login!');
+                })
+            })
+            .catch(err => {
+                console.log(`There was an error: ${err}`);
+            })
+
+    }
+
+    const handleRegister = () => {
+        axios.post('http://localhost:8000', { name: registerInput.username, pwd: registerInput.password, email: registerInput.email })
+            .then(res => {
+                let data = res.data;
+                if (!data || (data.length === 0)) throw new Error('No data found!');
+                data.forEach((entry) => {
+                    if ((entry.name === loginInput.username) && (entry.pwd === loginInput.password)) console.log('Successful login!');
+                    else console.log('Unsuccessful login!');
+                })
+            })
+            .catch(err => {
+                console.log(`There was an error: ${err}`);
+            })
+
+    }
 
     const onChangeLogin = (e) => {
         switch (e.target.name) {
@@ -36,7 +69,8 @@ const Loginpage = () => {
                 setRegisterInput((currentRegister) => { return { ...currentRegister, username: e.target.value } });
                 break;
             case 'email':
-                setRegisterInput((currentRegister) => { return { ...currentRegister, email: e.target.value } })
+                setRegisterInput((currentRegister) => { return { ...currentRegister, email: e.target.value } });
+                break;
             case 'password':
                 setRegisterInput((currentRegister) => { return { ...currentRegister, password: e.target.value } });
                 break;
@@ -83,7 +117,7 @@ const Loginpage = () => {
             animationDuration: '3s',
             animationFillMode: 'both'
         })
-        const interval = setTimeout(() => {
+        setTimeout(() => {
             setMode('register');
             setAnimationEnd(true);
         }, [3000])
@@ -128,13 +162,11 @@ const Loginpage = () => {
             animationDuration: '3s',
             animationFillMode: 'both'
         })
-        const interval = setTimeout(() => {
+        setTimeout(() => {
             setMode('login');
             setAnimationEnd(true);
         }, [3000])
     }
-
-    console.log(mode === 'login' && animationEnd);
 
     return (
         <Card
@@ -159,7 +191,7 @@ const Loginpage = () => {
                         </Grid>
                         <Grid width='40%' display='flex' alignItems='center' justifyContent='space-evenly'>
                             <Button onClick={setAnimationLogin}>Nemate račun?</Button>
-                            <Button onClick={() => { console.log('u: ', loginInput.username, " p: ", loginInput.password) }}>Ulogiraj se</Button>
+                            <Button onClick={handleLogin}>Ulogiraj se</Button>
                         </Grid>
 
                     </Grid>
@@ -176,7 +208,7 @@ const Loginpage = () => {
                         </Grid>
                         <Grid width='40%' display='flex' alignItems='center' justifyContent='space-evenly'>
                             <Button onClick={setAnimationRegister}>Imate račun?</Button>
-                            <Button onClick={() => { console.log('u: ', registerInput.username, " e: ", registerInput.email, " p: ", registerInput.password) }}>Ulogiraj se</Button>
+                            <Button onClick={handleRegister}>Registriraj se</Button>
                         </Grid>
 
                     </Grid>
