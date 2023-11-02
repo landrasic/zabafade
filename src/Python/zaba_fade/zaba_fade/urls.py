@@ -20,5 +20,7 @@ from app.views import *
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", UserView.as_view(), name="anything"),
+    path("user/", UserView.as_view()),
+    path("user/<int:pk>/", UserSingleView.as_view()),
+    path("appointment/", AppointmentView.as_view()),
 ]

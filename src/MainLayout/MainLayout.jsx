@@ -7,7 +7,7 @@ import { Grid } from '@mui/material';
 function MainLayout() {
   return (
     <Grid container height='100%' direction='column' className='background'>
-      <Grid item xs={1}>
+      <Grid item xs={1} width='100%'>
         <NavBar />
       </Grid>
       <Grid item xs={10}>

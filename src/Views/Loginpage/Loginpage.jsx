@@ -1,9 +1,12 @@
 import React, { useState } from "react"
-import axios from 'axios'
 
-import { Card, Typography, Grid, TextField, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+
+import { Card, Typography, Grid, TextField, Button, Snackbar, Alert } from "@mui/material";
+import { fetchUsers, postUser } from "../../Utility/account";
 
 const Loginpage = () => {
+    const navigate = useNavigate();
 
     const [loginInput, setLoginInput] = useState({
         username: '',
@@ -17,37 +20,48 @@ const Loginpage = () => {
     const [customSx, setCustomSx] = useState(null);
     const [mode, setMode] = useState('login');
     const [animationEnd, setAnimationEnd] = useState(true);
+    const [toast, setToast] = useState({ message: '', state: false, mode: 'success' });
 
-    const handleLogin = () => {
-        axios.get('http://localhost:8000')
-            .then(res => {
-                let data = res.data;
-                if (!data || (data.length === 0)) throw new Error('No data found!');
-                data.forEach((entry) => {
-                    if ((entry.name === loginInput.username) && (entry.pwd === loginInput.password)) console.log('Successful login!');
-                    else console.log('Unsuccessful login!');
-                })
-            })
-            .catch(err => {
-                console.log(`There was an error: ${err}`);
-            })
+    const setLoginSession = (username, id) => {
+        var now = new Date();
+        var minutes = 60;
 
+        updateToastState(true, `${username} je logiran!`, 'success');
+
+        now.setTime(now.getTime() + (minutes * 60 * 1000));
+
+        document.cookie = `usr=${id}; expires=${now.toUTCString()}; path=/;`
+
+        navigate('/');
     }
 
-    const handleRegister = () => {
-        axios.post('http://localhost:8000', { name: registerInput.username, pwd: registerInput.password, email: registerInput.email })
-            .then(res => {
-                let data = res.data;
-                if (!data || (data.length === 0)) throw new Error('No data found!');
-                data.forEach((entry) => {
-                    if ((entry.name === loginInput.username) && (entry.pwd === loginInput.password)) console.log('Successful login!');
-                    else console.log('Unsuccessful login!');
-                })
-            })
-            .catch(err => {
-                console.log(`There was an error: ${err}`);
-            })
+    const updateToastState = (state, message, mode) => {
+        setToast((currentToast) => {
+            return {
+                message: message !== undefined ? message : currentToast.message,
+                state: state !== undefined ? state : currentToast.state,
+                mode: mode !== undefined ? mode : currentToast.mode
+            }
+        })
+    }
 
+    const handleLogin = async () => {
+        let result = await fetchUsers();
+        result.forEach((entry) => {
+            if ((entry.name === loginInput.username) && (entry.pwd === loginInput.password)) setLoginSession(entry.name, entry.id);
+            else updateToastState(true, `Greška kod ulogiranja.`, 'error');
+        })
+    }
+
+    const handleRegister = async () => {
+        let result = await postUser({ name: registerInput.username, pwd: registerInput.password, email: registerInput.email });
+        if (result === 'success') {
+            updateToastState(true, `${registerInput.username} je kreiran!`, 'success');
+            setAnimationRegister();
+        }
+        else {
+            updateToastState(true, `Greška kod registracije.`, 'error');
+        }
     }
 
     const onChangeLogin = (e) => {
@@ -186,7 +200,7 @@ const Loginpage = () => {
                     <Grid height='100%' width='100%' display='flex' alignItems='center' justifyContent='center' flexDirection='column'>
                         <Grid height='40%' display='flex' alignItems='center' justifyContent='space-evenly' flexDirection='column'>
                             <Typography variant="h3">Login</Typography>
-                            <TextField label="Korisničko ime" variant="outlined" value={loginInput.username} name='username' onChange={onChangeLogin} />
+                            <TextField label="Ime i prezime" variant="outlined" value={loginInput.username} name='username' onChange={onChangeLogin} />
                             <TextField label="Lozinka" variant="outlined" type="password" value={loginInput.password} name='password' onChange={onChangeLogin} />
                         </Grid>
                         <Grid width='40%' display='flex' alignItems='center' justifyContent='space-evenly'>
@@ -202,7 +216,7 @@ const Loginpage = () => {
                     <Grid height='100%' width='100%' display='flex' alignItems='center' justifyContent='center' flexDirection='column'>
                         <Grid height='40%' display='flex' alignItems='center' justifyContent='space-evenly' flexDirection='column'>
                             <Typography variant="h3">Napravi račun</Typography>
-                            <TextField label="Korisničko ime" variant="outlined" value={registerInput.username} name='username' onChange={onChangeRegister} />
+                            <TextField label="Ime i prezime" variant="outlined" value={registerInput.username} name='username' onChange={onChangeRegister} />
                             <TextField label="Email" variant="outlined" value={registerInput.email} name='email' onChange={onChangeRegister} />
                             <TextField label="Lozinka" variant="outlined" type="password" value={registerInput.password} name='password' onChange={onChangeRegister} />
                         </Grid>
@@ -214,6 +228,11 @@ const Loginpage = () => {
                     </Grid>
                 )
             }
+            <Snackbar open={toast.state} autoHideDuration={6000} onClose={() => { updateToastState(false) }} anchorOrigin={{ horizontal: 'right', vertical: 'top' }}>
+                <Alert onClose={() => { updateToastState(false) }} severity={toast.mode} sx={{ width: '100%' }}>
+                    {toast.message}
+                </Alert>
+            </Snackbar>
         </Card>
     )
 };

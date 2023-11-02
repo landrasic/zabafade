@@ -47,7 +47,7 @@ const theme = createTheme({
     MuiTextField: {
       defaultProps: {
         sx: {
-          color: "white",
+          color: "grey",
         },
       },
     },

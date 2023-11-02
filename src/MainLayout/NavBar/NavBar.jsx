@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
-import { AppBar, Box, Toolbar, Typography, IconButton, Menu, Avatar, Button, Tooltip, MenuItem, } from "@mui/material";
+import { AppBar, Box, Toolbar, Typography, IconButton, Menu, Button, MenuItem, } from "@mui/material";
 
 import MenuIcon from '@mui/icons-material/Menu';
 import AdbIcon from '@mui/icons-material/Adb';
@@ -8,26 +9,20 @@ import AdbIcon from '@mui/icons-material/Adb';
 import LogoPath from '../../Assets/Images/favicon-32x32.png'
 
 function NavBar() {
+  const { pathname } = useLocation();
   const pages = [];
-  const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
   };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
 
   const LogoIcon = () => {
     return (
@@ -35,7 +30,32 @@ function NavBar() {
     )
   }
 
+  function getCookie(cname) {
+    let name = cname + "=";
+    let ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) === ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) === 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
 
+  useEffect(() => {
+    var cookieValue = getCookie('usr');
+
+    if (cookieValue !== "") setLoggedIn(true);
+    else setLoggedIn(false);
+  }, [pathname])
+
+  const handleLogout = () => {
+    document.cookie = "usr=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    window.location.reload();
+  }
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -127,35 +147,16 @@ function NavBar() {
             ))}
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+          {
+            loggedIn && (
+              <Box sx={{ flexGrow: 0 }}>
+                <Button onClick={handleLogout}>
+                  Odjava
+                </Button>
+              </Box>
+            )
+          }
+
         </Toolbar>
       </AppBar>
     </Box>

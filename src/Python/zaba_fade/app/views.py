@@ -23,3 +23,22 @@ from .serializer import *
 class UserView(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+class UserSingleView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class AppointmentView(generics.ListCreateAPIView):
+    queryset = Appointment.objects.all()
+    serializer_class = AppointmentSerializer
+
+    def get_queryset(self):
+        queryset = Appointment.objects.all()
+        clientId = self.request.query_params.get("client")
+
+        if clientId:
+            queryset = queryset.filter(client=clientId)
+
+        return queryset
