@@ -1,7 +1,8 @@
+import json
 from django.shortcuts import render
 
-# from rest_framework.views import APIView
-# from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from rest_framework import generics
 from .models import *
 from .serializer import *
@@ -42,3 +43,29 @@ class AppointmentView(generics.ListCreateAPIView):
             queryset = queryset.filter(client=clientId)
 
         return queryset
+
+
+class UserAppointmentView(APIView):
+    def get(self, request):
+        users = User.objects.all()
+        appointments = Appointment.objects.all()
+
+        output = [
+            {
+                "id": output.id,
+                "name": output.name,
+                "email": output.email,
+                "appointment": {
+                    "id": list(
+                        filter(lambda x: x.client.id == output.id, appointments)
+                    )[0].id,
+                    "dateTime": list(
+                        filter(lambda x: x.client.id == output.id, appointments)
+                    )[0].dateTime,
+                }
+                if list(filter(lambda x: x.client.id == output.id, appointments)) != []
+                else None,
+            }
+            for output in users
+        ]
+        return Response(output)

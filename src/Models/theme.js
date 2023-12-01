@@ -51,6 +51,22 @@ const theme = createTheme({
         },
       },
     },
+    MuiTable: {
+      defaultProps: {
+        sx: {
+          width: "auto",
+          backgroundColor: "#262626",
+          borderRadius: "5px",
+        },
+      },
+    },
+    MuiTableCell: {
+      defaultProps: {
+        sx: {
+          color: "#3DAF81",
+        },
+      },
+    },
   },
   status: {
     danger: orange[500],

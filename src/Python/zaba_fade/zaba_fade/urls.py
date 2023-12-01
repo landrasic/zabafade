@@ -23,4 +23,5 @@ urlpatterns = [
     path("user/", UserView.as_view()),
     path("user/<int:pk>/", UserSingleView.as_view()),
     path("appointment/", AppointmentView.as_view()),
+    path("usersWithAppointment/", UserAppointmentView.as_view()),
 ]

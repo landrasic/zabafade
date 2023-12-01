@@ -40,3 +40,16 @@ export async function postAppointment(appointment) {
     return "error";
   }
 }
+
+export async function fetchUserAppointments() {
+  const url = "http://localhost:8000/usersWithAppointment/";
+
+  try {
+    const { data: response } = await axios.get(url);
+    if (!response || response.length === 0) throw new Error("No data found!");
+    return response;
+  } catch (err) {
+    console.log(`There was an error: ${err}`);
+    return err;
+  }
+}

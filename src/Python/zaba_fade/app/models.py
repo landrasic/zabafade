@@ -13,5 +13,7 @@ class User(models.Model):
 
 class Appointment(models.Model):
     id = models.AutoField(primary_key=True)
-    client = models.ForeignKey(User, on_delete=models.CASCADE)
+    client = models.ForeignKey(
+        User, on_delete=models.CASCADE, default=None, blank=True, null=True
+    )
     dateTime = models.DateTimeField()

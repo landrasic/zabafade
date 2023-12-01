@@ -9,6 +9,7 @@ import MainLayout from "./MainLayout/MainLayout";
 
 const Homepage = lazy(() => import("./Views/Homepage/index"));
 const Loginpage = lazy(() => import("./Views/Loginpage/index"));
+const Adminpage = lazy(() => import("./Views/Adminpage/index"));
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/" element={<MainLayout />}>
               <Route index element={<Homepage />} />
               <Route path="/login" element={<Loginpage />} />
+              <Route path="/admin" element={<Adminpage />} />
             </Route>
           </Routes>
         </Suspense>
